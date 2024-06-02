@@ -21,15 +21,13 @@ public_users.post("/register", (req,res) => {
     password: req.body.password,
   }
   if (newUser.username && newUser.password) {
-    const isExisting = users.some((user) => user.username = newUser.username && user.password === newUser.password);
+    if (isValid(newUser.username)) {
+      users.push(newUser);
 
-    if (isExisting) {
-      return res.status(200).send('Already exists');
+      return res.status(200).send('The user has been successfully registered');
     }
 
-    users.push(newUser);
-
-    return res.status(200).send('The user has been successfully registered');
+    return res.status(200).send('Already exists');
   }
 
   return res.status(200).send('Missing mandatory parameters');

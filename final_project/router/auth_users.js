@@ -8,18 +8,16 @@ let users = [];
 const JWT_SECRET = 'fingerprint_customer';
 
 const isValid = (username)=>{ //returns boolean
-//write code to check is the username is valid
+ return !users.some((user) => user.username = username)
 }
 
 const authenticatedUser = (username,password)=>{ //returns boolean
-//write code to check if username and password match the one we have in records.
+  return users.some((user) => user.username = username && user.password === password)
 }
 
 //only registered users can login
 regd_users.post("/login", (req,res) => {
-  const isExisting = users.some((user) => user.username = req.body.username && user.password === req.body.password);
-
-  if (isExisting) {
+  if (authenticatedUser(req.body.username, req.body.password)) {
     const token = jwt.sign({ user: req.body.username, password: req.body.password }, JWT_SECRET);
 
     req.session.authorization = {
