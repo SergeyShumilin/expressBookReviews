@@ -20,7 +20,7 @@ regd_users.post("/login", (req,res) => {
   const isExisting = users.some((user) => user.username = req.body.username && user.password === req.body.password);
 
   if (isExisting) {
-    const token = jwt.sign({ user: req.body.usernamw, password: req.body.password }, JWT_SECRET);
+    const token = jwt.sign({ user: req.body.username, password: req.body.password }, JWT_SECRET);
 
     req.session.authorization = {
       accessToken: token,
@@ -34,8 +34,18 @@ regd_users.post("/login", (req,res) => {
 
 // Add a book review
 regd_users.put("/auth/review/:isbn", (req, res) => {
-  //Write your code here
-  return res.status(300).json({message: "Yet to be implemented"});
+  const book = books[req.params.isbn];
+
+  if (book) {
+    book.reviews = {
+      ...book.reviews,
+      [req.user]: req.query.review,
+    };
+
+    return res.status(200).json(book);
+  }
+
+  return res.status(404).json({message: "Not found"});
 });
 
 module.exports.authenticated = regd_users;
